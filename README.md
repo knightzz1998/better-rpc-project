@@ -8,8 +8,10 @@ better-rpc 是一款分布式的、高性能、可扩展的RPC框架
 
 待实现 :
 
-- :white_check_mark: 实现基础RPC功能
-- :white_medium_square: RPC整合SpringBoot
+- :white_check_mark: RPC服务核心注解实现
+
+## :sparkles: extension function
+
 - :white_medium_square: 注册中心的插件化动态扩展
 - :white_medium_square: 序列化方式插件化动态扩展 
 - :white_medium_square: 动态代理插件化动态扩展 
