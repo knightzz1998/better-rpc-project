@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/message-queue-red) ![](https://img.shields.io/badge/technological-rpc-red) ![](https://img.shields.io/badge/technological-netty-yellow) ![](https://img.shields.io/badge/rpc-springboot-green) ![](https://img.shields.io/badge/methods-RPC-blue)
 
-本仓库主要是自定义RPC项目
+better-rpc 是一款分布式的、高性能、可扩展的RPC框架
 
 ## :pushpin: base function
 
