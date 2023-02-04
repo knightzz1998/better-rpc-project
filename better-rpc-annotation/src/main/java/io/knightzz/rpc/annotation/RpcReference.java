@@ -1,5 +1,12 @@
 package io.knightzz.rpc.annotation;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * @author 王天赐
  * @title: RpcReference
@@ -9,6 +16,9 @@ package io.knightzz.rpc.annotation;
  * @github <a href="https://github.com/knightzz1998">https://github.com/knightzz1998</a>
  * @create: 2023-01-29 22:12
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+@Autowired
 public @interface RpcReference {
 
     /**

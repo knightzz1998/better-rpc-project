@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>better-rpc-annotation</module>
+        <module>better-rpc-common</module>
     </modules>
 
     <properties>
