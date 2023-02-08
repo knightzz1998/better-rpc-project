@@ -11,6 +11,7 @@
     <modules>
         <module>better-rpc-annotation</module>
         <module>better-rpc-common</module>
+        <module>better-rpc-test</module>
     </modules>
 
     <properties>
@@ -51,7 +52,6 @@
             <artifactId>commons-logging</artifactId>
             <version>${common.logging}</version>
         </dependency>
-
 
         <!-- <dependency>
              <groupId>ch.qos.logback</groupId>

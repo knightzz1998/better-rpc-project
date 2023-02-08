@@ -49,7 +49,7 @@ public class ClassScanner {
         String packageDirName = packageName.replace(".", "/");
 
         // 去 classPath 下面找到真实的路径
-        Enumeration<URL> urls = Thread.currentThread().getClass().getClassLoader().getResources(packageDirName);
+        Enumeration<URL> urls = Thread.currentThread().getContextClassLoader().getResources(packageDirName);
         // 2. 迭代这个路径下的所有文件(包括目录)
         while (urls.hasMoreElements()) {
 
@@ -59,7 +59,6 @@ public class ClassScanner {
 
             // 如果是以文件的形式保存在服务器上
             if (PROTOCOL_FILE.equals(protocol)) {
-
                 // 获取包的物理路径
                 String filePath = URLDecoder.decode(url.getFile(), "UTF-8");
                 findAndAddClassesInPackageByFile(packageName, filePath, recursive, classNameList);
