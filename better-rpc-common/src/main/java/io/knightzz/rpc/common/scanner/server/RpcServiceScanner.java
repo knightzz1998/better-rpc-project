@@ -64,16 +64,12 @@ public class RpcServiceScanner extends ClassScanner {
         // RpcService 标注的接口的 Class 类
         Class<?> interfaceClass = rpcService.interfaceClass();
 
-        if (interfaceClass == void.class) {
+        if (interfaceClass == null || interfaceClass == void.class) {
             // 返回接口的全类名
             return rpcService.interfaceClassName();
         }
         // interfaceClassName 是 @RpcService 注解的字段
-        String serviceName = interfaceClass.getName();
-        if (serviceName == null || serviceName.trim().isEmpty()) {
-            return serviceName;
-        }
-        return serviceName;
+        return interfaceClass.getName();
     }
 
 }

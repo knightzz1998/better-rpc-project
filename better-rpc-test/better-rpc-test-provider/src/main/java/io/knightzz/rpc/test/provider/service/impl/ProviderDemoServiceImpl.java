@@ -13,7 +13,7 @@ import io.knightzz.rpc.test.provider.service.DemoService;
  * @create: 2023-02-10 10:32
  */
 @RpcService(
-        interfaceClass = DemoService.class,
+        interfaceClass = String.class,
         interfaceClassName = "io.knightzz.rpc.test.provider.service.DemoService",
         version = "1.0.0",
         group = "demoGroup"
