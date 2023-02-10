@@ -12,6 +12,7 @@
         <module>better-rpc-annotation</module>
         <module>better-rpc-common</module>
         <module>better-rpc-test</module>
+        <module>better-rpc-provider</module>
     </modules>
 
     <properties>

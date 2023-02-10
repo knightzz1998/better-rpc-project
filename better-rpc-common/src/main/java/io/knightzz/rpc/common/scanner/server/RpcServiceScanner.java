@@ -45,23 +45,35 @@ public class RpcServiceScanner extends ClassScanner {
                 // 判断 classObj 是否有 RpcService注解
                 RpcService rpcServiceAnnotation = classObj.getAnnotation(RpcService.class);
                 if (rpcServiceAnnotation != null) {
-
                     // TODO : 后续逻辑需要向注册中心注册服务元数据. 以及向handlerMap中记录了标注@RpcService注解的类的实例对象
-                    LOGGER.info("当前标注了@RpcService注解的类实例名称===>>> " + classObj.getName());
-                    LOGGER.info("@RpcService注解上标注的属性信息如下：");
-                    LOGGER.info("interfaceClass===>>> " + rpcServiceAnnotation.interfaceClass().getName());
-                    LOGGER.info("interfaceClassName===>>> " + rpcServiceAnnotation.interfaceClassName());
-                    LOGGER.info("version===>>> " + rpcServiceAnnotation.version());
-                    LOGGER.info("group===>>> " + rpcServiceAnnotation.group());
-
+                    String serviceName = getServiceName(rpcServiceAnnotation);
+                    // key = serviceName + version + group
+                    String key = serviceName.concat(rpcServiceAnnotation.version()).concat(rpcServiceAnnotation.group());
+                    handlerMap.put(key, classObj.newInstance());
                 }
-
-            } catch (ClassNotFoundException e) {
-                LOGGER.error("scanner classes throws exception: {}", e);
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                LOGGER.error("scanner classes throws exception", e);
             }
 
         });
         return handlerMap;
+    }
+
+    private static String getServiceName(RpcService rpcService) {
+
+        // RpcService 标注的接口的 Class 类
+        Class<?> interfaceClass = rpcService.interfaceClass();
+
+        if (interfaceClass == void.class) {
+            // 返回接口的全类名
+            return rpcService.interfaceClassName();
+        }
+        // interfaceClassName 是 @RpcService 注解的字段
+        String serviceName = interfaceClass.getName();
+        if (serviceName == null || serviceName.trim().isEmpty()) {
+            return serviceName;
+        }
+        return serviceName;
     }
 
 }
