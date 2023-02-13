@@ -6,7 +6,7 @@ better-rpc 是一款分布式的、高性能、可扩展的RPC框架
 
 ## :pushpin: base function
 
-### :fire: 待实现 :
+### :fire: 已实现 :
 
 - :white_check_mark: RPC服务核心注解实现
 - :white_check_mark: 自定义注解扫描逻辑实现

@@ -19,5 +19,4 @@ import io.knightzz.rpc.test.provider.service.DemoService;
         group = "demoGroup"
 )
 public class ProviderDemoServiceImpl implements DemoService {
-
 }
