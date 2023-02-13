@@ -13,6 +13,9 @@
         <module>better-rpc-common</module>
         <module>better-rpc-test</module>
         <module>better-rpc-provider</module>
+        <module>better-rpc-protocol</module>
+        <module>better-rpc-constants</module>
+        <module>better-rpc-serialization</module>
     </modules>
 
     <properties>
