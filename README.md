@@ -10,6 +10,9 @@ better-rpc 是一款分布式的、高性能、可扩展的RPC框架
 
 - :white_check_mark: RPC服务核心注解实现
 - :white_check_mark: 自定义注解扫描逻辑实现
+- :white_check_mark: 服务提供者收发消息基础功能实现
+- :white_check_mark: 自定义网络传输协议的实现
+- :white_check_mark: 自定义网络编解码的实现
 
 ## :sparkles: extension function
 
