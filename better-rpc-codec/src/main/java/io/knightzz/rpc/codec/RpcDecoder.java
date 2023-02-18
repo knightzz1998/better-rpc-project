@@ -2,8 +2,12 @@ package io.knightzz.rpc.codec;
 
 import io.knightzz.rpc.common.utils.SerializationUtils;
 import io.knightzz.rpc.constants.RpcConstants;
+import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.enumeration.RpcType;
 import io.knightzz.rpc.protocol.header.RpcHeader;
+import io.knightzz.rpc.protocol.request.RpcRequest;
+import io.knightzz.rpc.protocol.response.RpcResponse;
+import io.knightzz.rpc.serialization.api.Serialization;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -27,7 +31,7 @@ public class RpcDecoder extends ByteToMessageDecoder implements RpcCodec {
                           ByteBuf in, List<Object> out) throws Exception {
 
         // 可读消息 < RpcConstants.HEAD_TOTAL_LEN 消息头, 说明不是完整消息
-        if(in.readableBytes() < RpcConstants.HEAD_TOTAL_LEN) {
+        if (in.readableBytes() < RpcConstants.HEAD_TOTAL_LEN) {
             return;
         }
 
@@ -39,7 +43,7 @@ public class RpcDecoder extends ByteToMessageDecoder implements RpcCodec {
         // 这个读取顺序要和 RpcEncoder的顺序一致
         short magic = in.readShort();
 
-        if(magic != RpcConstants.MAGIC) {
+        if (magic != RpcConstants.MAGIC) {
             throw new IllegalArgumentException("the magic number is illegal, " + magic);
         }
 
@@ -51,25 +55,31 @@ public class RpcDecoder extends ByteToMessageDecoder implements RpcCodec {
         long requestId = in.readLong();
 
         // 序列化类型
-        ByteBuf serializationTypeBuf =  in.readBytes(SerializationUtils.MAX_SERIALIZATION_TYPE_COUNT);
+        ByteBuf serializationTypeBuf = in.readBytes(SerializationUtils.MAX_SERIALIZATION_TYPE_COUNT);
         // 对序列化后的数据移除0
         String serializationType = SerializationUtils
                 .subString(serializationTypeBuf.toString(UTF_8));
 
 
         // 获取消息体的长度
-        int dataLength = in.readInt();
+        int msgLen = in.readInt();
         // 如果剩下可读的字节数小于消息体的长度, 说明消息体数据丢失
-        if(in.readableBytes() < dataLength) {
+        if (in.readableBytes() < msgLen) {
             // 重置读指针位置
             in.resetReaderIndex();
             return;
         }
 
+        // 创建一个byte类型的data数组, 用于存储消息体数据
+        // 这个部分对应 RpcEncoder 的
+        // byte[] data = serialization.serialization(msg.getBody());
+        // byteBuf.writeBytes(data);
+        byte[] data = new byte[msgLen];
+
         // 将消息类型转换成对应的注解
         RpcType msgTypeEnum = RpcType.findByType(msgType);
         // 判断消息类型是否为空
-        if(msgTypeEnum == null) {
+        if (msgTypeEnum == null) {
             return;
         }
 
@@ -80,5 +90,46 @@ public class RpcDecoder extends ByteToMessageDecoder implements RpcCodec {
         header.setMsgType(msgType);
         header.setStatus(status);
         header.setRequestId(requestId);
+        header.setSerializationType(serializationType);
+        header.setMsgLen(msgLen);
+
+        // TODO : Serialization 是扩展点
+        Serialization serialization = getJdkSerialization();
+
+        switch (msgTypeEnum) {
+
+            case REQUEST:
+                // 反序列化是把 byte数组通过 对象流的方式转换为 RpcRequest 对象
+                RpcRequest requestBody = serialization.deserialization(data, RpcRequest.class);
+
+                if(requestBody != null) {
+                    // 将header和body封装到一起
+                    RpcProtocol<RpcRequest> protocol = new RpcProtocol<>();
+                    protocol.setHeader(header);
+                    protocol.setBody(requestBody);
+                    out.add(protocol);
+                }
+                break;
+            case RESPONSE:
+
+                RpcResponse responseBody = serialization.deserialization(data, RpcResponse.class);
+
+                if(responseBody != null) {
+                    // 将header和body封装到一起
+                    RpcProtocol<RpcResponse> protocol = new RpcProtocol<>();
+                    protocol.setHeader(header);
+                    protocol.setBody(responseBody);
+                    out.add(protocol);
+                }
+
+                break;
+            case HEARTBEAT:
+                // TODO 心跳机制解码器待实现
+                break;
+            default:
+                break;
+        }
+
+
     }
 }

@@ -1,5 +1,7 @@
 package io.knightzz.rpc.provider.common.server.base;
 
+import io.knightzz.rpc.codec.RpcDecoder;
+import io.knightzz.rpc.codec.RpcEncoder;
 import io.knightzz.rpc.provider.common.handler.RpcProviderHandler;
 import io.knightzz.rpc.provider.common.server.api.Server;
 import io.netty.bootstrap.Bootstrap;
@@ -72,8 +74,8 @@ public class BaseServer implements Server {
                             ChannelPipeline pipeline = socketChannel.pipeline();
 
                             // 添加 handler
-                            pipeline.addLast(new StringEncoder());
-                            pipeline.addLast(new StringDecoder());
+                            pipeline.addLast(new RpcEncoder());
+                            pipeline.addLast(new RpcDecoder() );
                             pipeline.addLast(new RpcProviderHandler(handlerMap));
                         }
                     })
