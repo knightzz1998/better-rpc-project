@@ -26,7 +26,6 @@ public class JdkSerialization implements Serialization {
         }
         // 实现思路 :
         // 通过Byte流的形式将对象转换成 byte 数组
-
         try{
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(os);
@@ -47,8 +46,8 @@ public class JdkSerialization implements Serialization {
         }
         try{
             ByteArrayInputStream is = new ByteArrayInputStream(data);
-            ObjectInputStream ois = new ObjectInputStream(is);
-            return (T) ois.readObject();
+            ObjectInputStream in = new ObjectInputStream(is);
+            return (T) in.readObject();
         }catch (Exception e) {
             throw new SerializationException(e.getMessage(), e);
         }

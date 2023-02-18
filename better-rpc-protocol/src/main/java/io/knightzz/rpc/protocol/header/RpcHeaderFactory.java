@@ -15,7 +15,7 @@ import io.knightzz.rpc.protocol.enumeration.RpcType;
  */
 public class RpcHeaderFactory {
 
-    public static RpcHeader getRpcHeader(String serializationType){
+    public static RpcHeader getRequestHeader(String serializationType){
         RpcHeader header = new RpcHeader();
 
         Long requestId = IdFactory.getId();

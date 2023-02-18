@@ -75,6 +75,7 @@ public class RpcDecoder extends ByteToMessageDecoder implements RpcCodec {
         // byte[] data = serialization.serialization(msg.getBody());
         // byteBuf.writeBytes(data);
         byte[] data = new byte[msgLen];
+        in.readBytes(data);
 
         // 将消息类型转换成对应的注解
         RpcType msgTypeEnum = RpcType.findByType(msgType);
