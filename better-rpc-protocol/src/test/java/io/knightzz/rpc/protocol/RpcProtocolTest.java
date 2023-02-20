@@ -17,7 +17,7 @@ class RpcProtocolTest {
 
     public static void main(String[] args) {
 
-        RpcHeader header = RpcHeaderFactory.getRpcHeader("jdk");
+        RpcHeader header = RpcHeaderFactory.getRequestHeader("jdk");
         RpcRequest body = new RpcRequest();
         body.setOneway(false);
         body.setAsync(false);

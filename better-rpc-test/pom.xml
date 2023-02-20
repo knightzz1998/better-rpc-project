@@ -16,6 +16,7 @@
         <module>better-rpc-test-other</module>
         <module>better-rpc-test-provider</module>
         <module>better-rpc-test-consumer</module>
+        <module>better-rpc-test-api</module>
     </modules>
 
     <properties>

@@ -24,13 +24,13 @@ public class RpcTestConsumerHandler extends SimpleChannelInboundHandler<RpcProto
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        logger.info("发送数据开始...");
+        logger.info("Mock 发送数据开始...");
         //模拟发送数据
         RpcProtocol<RpcRequest> protocol = new RpcProtocol<RpcRequest>();
 
         protocol.setHeader(RpcHeaderFactory.getRequestHeader("jdk"));
         RpcRequest request = new RpcRequest();
-        request.setClassName("io.knightzz.rpc.test.DemoService");
+        request.setClassName("io.knightzz.rpc.test.api.DemoService");
         request.setGroup("knightzz");
         request.setMethodName("hello");
         request.setParameters(new Object[]{"knightzz"});

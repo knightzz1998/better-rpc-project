@@ -1,6 +1,7 @@
 package io.knightzz.rpc.common.scanner.server;
 
 import io.knightzz.rpc.annotation.RpcService;
+import io.knightzz.rpc.common.helper.RpcServiceHelper;
 import io.knightzz.rpc.common.scanner.ClassScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,14 +48,16 @@ public class RpcServiceScanner extends ClassScanner {
                 if (rpcServiceAnnotation != null) {
                     // TODO : 后续逻辑需要向注册中心注册服务元数据. 以及向handlerMap中记录了标注@RpcService注解的类的实例对象
                     String serviceName = getServiceName(rpcServiceAnnotation);
-                    // key = serviceName + version + group
-                    String key = serviceName.concat(rpcServiceAnnotation.version()).concat(rpcServiceAnnotation.group());
-                    handlerMap.put(key, classObj.newInstance());
+                    // key = 服务名称#版本名称#分组名称
+                    String serviceBeanKey = RpcServiceHelper.
+                            buildServiceKey(serviceName, rpcServiceAnnotation.version(), rpcServiceAnnotation.group());
+                    // 服务启动后, 会自动扫描所有带 @RpcService注解的类, 然后去实例化这些类, 并把这些类存入HashMap
+                    // 接口实现类的全类名 + 版本号 + 分组 去作为唯一的hashKey
+                    handlerMap.put(serviceBeanKey, classObj.newInstance());
                 }
             } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                 LOGGER.error("scanner classes throws exception", e);
             }
-
         });
         return handlerMap;
     }
