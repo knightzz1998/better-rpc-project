@@ -4,14 +4,11 @@ import io.knightzz.rpc.codec.RpcDecoder;
 import io.knightzz.rpc.codec.RpcEncoder;
 import io.knightzz.rpc.provider.common.handler.RpcProviderHandler;
 import io.knightzz.rpc.provider.common.server.api.Server;
-import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +30,15 @@ public class BaseServer implements Server {
 
     protected final Logger logger = LoggerFactory.getLogger(BaseServer.class);
 
+    /**
+     * 存储服务执行类的实例, key由 服务名称#版本号#服务分组 组成
+     */
     protected Map<String, Object> handlerMap = new HashMap<>();
+
+    /**
+     * 服务提供者调用真实方法的类型 : JDK / cglib
+     */
+    private String reflectType;
 
     /**
      * IP
@@ -44,15 +49,15 @@ public class BaseServer implements Server {
      */
     protected int port = 27110;
 
-    public BaseServer(String serverAddress) {
+    public BaseServer(String serverAddress, String reflectType) {
 
         if (!StringUtils.isEmpty(serverAddress)) {
-
             // 获取id和端口
             String[] serverArray = serverAddress.split(":");
             this.host = serverArray[0];
             this.port = Integer.parseInt(serverArray[1]);
         }
+        this.reflectType = reflectType;
     }
 
     @Override
@@ -70,13 +75,11 @@ public class BaseServer implements Server {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-
                             ChannelPipeline pipeline = socketChannel.pipeline();
-
                             // 添加 handler
                             pipeline.addLast(new RpcEncoder());
-                            pipeline.addLast(new RpcDecoder() );
-                            pipeline.addLast(new RpcProviderHandler(handlerMap));
+                            pipeline.addLast(new RpcDecoder());
+                            pipeline.addLast(new RpcProviderHandler(reflectType, handlerMap));
                         }
                     })
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
