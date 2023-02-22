@@ -17,6 +17,7 @@
         <module>better-rpc-constants</module>
         <module>better-rpc-serialization</module>
         <module>better-rpc-codec</module>
+        <module>better-rpc-consumer</module>
     </modules>
 
     <properties>
