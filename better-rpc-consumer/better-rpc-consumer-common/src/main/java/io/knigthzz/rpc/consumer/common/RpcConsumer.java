@@ -41,6 +41,8 @@ public class RpcConsumer {
 
     private static Map<String, RpcConsumerHandler> handlerMap = new ConcurrentHashMap<>();
 
+
+
     private RpcConsumer() {
 
         bootstrap = new Bootstrap();
@@ -75,7 +77,7 @@ public class RpcConsumer {
         workGroup.shutdownGracefully();
     }
 
-    public void sendRequest(RpcProtocol<RpcRequest> protocol) throws Exception {
+    public Object sendRequest(RpcProtocol<RpcRequest> protocol) throws Exception {
 
         // TODO 这里的IP地址暂时写死, 后面引入注册中心的时候从注册中心获取
 
@@ -92,7 +94,6 @@ public class RpcConsumer {
             // 添加到缓存
             handlerMap.put(key, handler);
 
-
         } else if (!handler.getChannel().isActive()) {
             // 缓存中存在, 但是不活跃
             // 关闭, 重新获取
@@ -102,8 +103,11 @@ public class RpcConsumer {
             handlerMap.put(key, handler);
 
         }
-        handler.sendRequest(protocol);
+
+        return handler.sendRequest(protocol);
     }
+
+
 
     private RpcConsumerHandler getRpcConsumerHandler(String serviceAddress, int port) throws Exception {
 
