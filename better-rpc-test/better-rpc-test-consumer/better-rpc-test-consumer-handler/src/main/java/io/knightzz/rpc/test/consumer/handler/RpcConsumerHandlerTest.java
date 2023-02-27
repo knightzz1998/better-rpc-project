@@ -4,6 +4,10 @@ import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.header.RpcHeaderFactory;
 import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knigthzz.rpc.consumer.common.RpcConsumer;
+import io.knigthzz.rpc.consumer.common.future.RpcFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @author 王天赐
@@ -16,16 +20,13 @@ import io.knigthzz.rpc.consumer.common.RpcConsumer;
  */
 public class RpcConsumerHandlerTest {
 
+    private static final Logger logger = LoggerFactory.getLogger(RpcConsumerHandlerTest.class);
+
     public static void main(String[] args) throws Exception {
 
         RpcConsumer consumer = RpcConsumer.getInstance();
-
-        RpcProtocol<RpcRequest> protocol = getRpcRequestProtocol();
-
-        consumer.sendRequest(protocol);
-
-        Thread.sleep(2000);
-
+        RpcFuture rpcFuture = consumer.sendRequest(getRpcRequestProtocol());
+        logger.info("从消费者获取到的数据 ==> {}", rpcFuture.get());
         consumer.close();
     }
 

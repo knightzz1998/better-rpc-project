@@ -3,6 +3,7 @@ package io.knigthzz.rpc.consumer.common;
 import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knightzz.rpc.protocol.response.RpcResponse;
+import io.knigthzz.rpc.consumer.common.future.RpcFuture;
 import io.knigthzz.rpc.consumer.common.handler.RpcConsumerHandler;
 import io.knigthzz.rpc.consumer.common.initializer.RpcConsumerInitializer;
 import io.netty.bootstrap.Bootstrap;
@@ -77,7 +78,7 @@ public class RpcConsumer {
         workGroup.shutdownGracefully();
     }
 
-    public Object sendRequest(RpcProtocol<RpcRequest> protocol) throws Exception {
+    public RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol) throws Exception {
 
         // TODO 这里的IP地址暂时写死, 后面引入注册中心的时候从注册中心获取
 

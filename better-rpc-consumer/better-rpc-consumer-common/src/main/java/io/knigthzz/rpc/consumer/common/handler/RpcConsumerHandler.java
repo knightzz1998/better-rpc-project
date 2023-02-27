@@ -5,6 +5,7 @@ import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.header.RpcHeader;
 import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knightzz.rpc.protocol.response.RpcResponse;
+import io.knigthzz.rpc.consumer.common.future.RpcFuture;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -36,9 +37,9 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
 
     /**
      * 用于存储请求ID 与对应相响应结果的映射
-     * key = requestId, value = RpcProtocol
+     * key = requestId, value = RpcFuture
      */
-    private Map<Long, RpcProtocol<RpcResponse>> pendingResponse = new ConcurrentHashMap<>();
+    private Map<Long, RpcFuture> pendingRpc = new ConcurrentHashMap<>();
 
     public Channel getChannel() {
         return channel;
@@ -61,6 +62,13 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
         this.channel = ctx.channel();
     }
 
+    /**
+     * 接收响应数据
+     * @param channelHandlerContext
+     *
+     * @param protocol
+     * @throws Exception
+     */
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, RpcProtocol<RpcResponse> protocol) throws Exception {
 
@@ -72,24 +80,31 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
         // 获取 requestId
         RpcHeader header = protocol.getHeader();
         long requestId = header.getRequestId();
-        pendingResponse.put(requestId, protocol);
-
+        RpcFuture rpcFuture = pendingRpc.remove(requestId);
+        if (rpcFuture != null) {
+            rpcFuture.done(protocol);
+        }
     }
 
-    public Object sendRequest(RpcProtocol<RpcRequest> protocol) {
-        logger.info("服务消费者接发送的数据 ===> : {}", JSONObject.toJSONString(protocol));
-        channel.writeAndFlush(protocol);
+    public RpcFuture sendRequest(RpcProtocol<RpcRequest> rpcRequestRpcProtocol) {
+        logger.info("服务消费者接发送的数据 ===> : {}", JSONObject.toJSONString(rpcRequestRpcProtocol));
+        channel.writeAndFlush(rpcRequestRpcProtocol);
 
-        RpcHeader header = protocol.getHeader();
+        RpcHeader header = rpcRequestRpcProtocol.getHeader();
         long requestId = header.getRequestId();
 
         // 循环等待结果 => 异步 转  同步, channelRead0 接收到结果后, 就会把结果
-        while (true) {
-            RpcProtocol<RpcResponse> responseRpcProtocol = pendingResponse.remove(requestId);
-            if (responseRpcProtocol != null) {
-                return responseRpcProtocol.getBody().getResult();
-            }
-        }
+        RpcFuture rpcFuture = this.getRpcFuture(rpcRequestRpcProtocol);
+        return rpcFuture;
+    }
+
+    private RpcFuture getRpcFuture(RpcProtocol<RpcRequest> rpcRequestRpcProtocol) {
+
+        RpcFuture rpcFuture = new RpcFuture(rpcRequestRpcProtocol);
+        long requestId = rpcRequestRpcProtocol.getHeader().getRequestId();
+        pendingRpc.put(requestId, rpcFuture);
+        return rpcFuture;
+
     }
 
     public void close() {
