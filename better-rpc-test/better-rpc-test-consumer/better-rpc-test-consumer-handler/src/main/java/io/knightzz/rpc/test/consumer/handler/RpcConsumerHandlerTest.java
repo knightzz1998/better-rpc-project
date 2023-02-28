@@ -4,6 +4,7 @@ import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.header.RpcHeaderFactory;
 import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knigthzz.rpc.consumer.common.RpcConsumer;
+import io.knigthzz.rpc.consumer.common.context.RpcContext;
 import io.knigthzz.rpc.consumer.common.future.RpcFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +23,37 @@ public class RpcConsumerHandlerTest {
 
     private static final Logger logger = LoggerFactory.getLogger(RpcConsumerHandlerTest.class);
 
-    public static void main(String[] args) throws Exception {
-
+    public static void testSync() throws Exception {
         RpcConsumer consumer = RpcConsumer.getInstance();
         RpcFuture rpcFuture = consumer.sendRequest(getRpcRequestProtocol());
         logger.info("从消费者获取到的数据 ==> {}", rpcFuture.get());
         consumer.close();
+    }
+
+    public static void testAsync() throws Exception {
+        RpcConsumer consumer = RpcConsumer.getInstance();
+        RpcProtocol<RpcRequest> protocol = getRpcRequestProtocol();
+        protocol.getBody().setAsync(true);
+
+        consumer.sendRequest(protocol);
+
+        RpcFuture future = RpcContext.getContext().getRpcFuture();
+        logger.info("从消费者获取到的数据 ==> {}", future.get());
+        consumer.close();
+    }
+
+    public static void testOneway() throws Exception {
+
+        RpcConsumer consumer = RpcConsumer.getInstance();
+        RpcProtocol<RpcRequest> protocol = getRpcRequestProtocol();
+        protocol.getBody().setAsync(true);
+        protocol.getBody().setOneway(true);
+        consumer.sendRequest(protocol);
+        logger.info("无序获取返回的数据!");
+    }
+
+    public static void main(String[] args) throws Exception {
+        testOneway();
     }
 
     private static RpcProtocol<RpcRequest> getRpcRequestProtocol() {
@@ -41,7 +67,7 @@ public class RpcConsumerHandlerTest {
         request.setParameters(new Object[]{"knightzz"});
         request.setParameterTypes(new Class[]{String.class});
         request.setVersion("1.0.0");
-        request.setAsync(false);
+        request.setAsync(true);
         request.setOneway(false);
         protocol.setBody(request);
         return protocol;

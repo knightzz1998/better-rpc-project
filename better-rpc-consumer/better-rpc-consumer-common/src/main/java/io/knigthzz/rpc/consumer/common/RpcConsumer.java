@@ -2,7 +2,6 @@ package io.knigthzz.rpc.consumer.common;
 
 import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.request.RpcRequest;
-import io.knightzz.rpc.protocol.response.RpcResponse;
 import io.knigthzz.rpc.consumer.common.future.RpcFuture;
 import io.knigthzz.rpc.consumer.common.handler.RpcConsumerHandler;
 import io.knigthzz.rpc.consumer.common.initializer.RpcConsumerInitializer;
@@ -41,7 +40,6 @@ public class RpcConsumer {
     private static volatile RpcConsumer instance;
 
     private static Map<String, RpcConsumerHandler> handlerMap = new ConcurrentHashMap<>();
-
 
 
     private RpcConsumer() {
@@ -104,10 +102,9 @@ public class RpcConsumer {
             handlerMap.put(key, handler);
 
         }
-
-        return handler.sendRequest(protocol);
+        RpcRequest request = protocol.getBody();
+        return handler.sendRequest(protocol, request.isAsync(), request.isOneway());
     }
-
 
 
     private RpcConsumerHandler getRpcConsumerHandler(String serviceAddress, int port) throws Exception {
@@ -116,10 +113,10 @@ public class RpcConsumer {
 
         channelFuture.addListener(listener -> {
 
-            if(channelFuture.isSuccess()) {
-                logger.info("connect rpc server address {} on port {} success" , serviceAddress, port);
-            }else{
-                logger.error("connect rpc server address {} on port {} failed" , serviceAddress, port);
+            if (channelFuture.isSuccess()) {
+                logger.info("connect rpc server address {} on port {} success", serviceAddress, port);
+            } else {
+                logger.error("connect rpc server address {} on port {} failed", serviceAddress, port);
                 channelFuture.cause().printStackTrace();
                 //关闭当前work组
                 workGroup.shutdownGracefully();
