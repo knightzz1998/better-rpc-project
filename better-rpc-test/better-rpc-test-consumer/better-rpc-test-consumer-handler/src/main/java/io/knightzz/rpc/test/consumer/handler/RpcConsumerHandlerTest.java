@@ -53,7 +53,7 @@ public class RpcConsumerHandlerTest {
     }
 
     public static void main(String[] args) throws Exception {
-        testOneway();
+        testAsync();
     }
 
     private static RpcProtocol<RpcRequest> getRpcRequestProtocol() {

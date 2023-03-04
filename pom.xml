@@ -18,6 +18,7 @@
         <module>better-rpc-serialization</module>
         <module>better-rpc-codec</module>
         <module>better-rpc-consumer</module>
+        <module>better-proxy</module>
     </modules>
 
     <properties>

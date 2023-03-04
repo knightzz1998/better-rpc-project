@@ -1,5 +1,6 @@
 package io.knigthzz.rpc.consumer.common;
 
+import io.knightzz.rpc.common.threadpool.ClientThreadPool;
 import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knigthzz.rpc.consumer.common.future.RpcFuture;
@@ -73,7 +74,10 @@ public class RpcConsumer {
     }
 
     public void close() {
+
         workGroup.shutdownGracefully();
+        // 关闭线程池
+        ClientThreadPool.shutdown();
     }
 
     public RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol) throws Exception {

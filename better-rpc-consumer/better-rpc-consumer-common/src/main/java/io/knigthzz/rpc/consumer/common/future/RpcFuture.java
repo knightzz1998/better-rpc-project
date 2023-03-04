@@ -1,16 +1,21 @@
 package io.knigthzz.rpc.consumer.common.future;
 
+import io.knightzz.rpc.common.threadpool.ClientThreadPool;
 import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knightzz.rpc.protocol.response.RpcResponse;
+import io.knigthzz.rpc.consumer.common.callback.AsyncRpcCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author 王天赐
@@ -33,6 +38,16 @@ public class RpcFuture extends CompletableFuture<Object> {
 
     private long responseTimeThread = 5000;
 
+    /**
+     * 存储 回调接口 AsyncRpcCallback
+     */
+    private List<AsyncRpcCallback> pendingCallbacks = new ArrayList<>();
+
+    /**
+     * 可重入锁. 在添加和执行回调方法的时候加锁和解锁
+     */
+    private ReentrantLock lock = new ReentrantLock();
+
     public RpcFuture(RpcProtocol<RpcRequest> rpcRequestRpcProtocol) {
 
         this.sync = new Sync();
@@ -40,6 +55,11 @@ public class RpcFuture extends CompletableFuture<Object> {
         this.startTime = System.currentTimeMillis();
     }
 
+    /**
+     * 判断当前是否是已经接收到相应结果
+     *
+     * @return true 表示已经接收到了响应结果 , false 表示当前尚未接收到响应结果, 等待服务提供者响应结果
+     */
     @Override
     public boolean isDone() {
         return sync.isDone();
@@ -47,6 +67,7 @@ public class RpcFuture extends CompletableFuture<Object> {
 
     @Override
     public Object get() throws InterruptedException, ExecutionException {
+        // TODO ?
         sync.acquire(-1);
         if (this.responseRpcProtocol != null) {
             return this.responseRpcProtocol.getBody().getResult();
@@ -68,10 +89,7 @@ public class RpcFuture extends CompletableFuture<Object> {
             long requestId = this.requestRpcProtocol.getHeader().getRequestId();
             String className = this.requestRpcProtocol.getBody().getClassName();
             String methodName = this.requestRpcProtocol.getBody().getMethodName();
-            throw new RuntimeException("Request Timeout Exception ! Request Id : "
-                    + requestId + " Request Class Name : " +
-                    className + " Rpc Method Name : " + methodName
-            );
+            throw new RuntimeException("Request Timeout Exception ! Request Id : " + requestId + " Request Class Name : " + className + " Rpc Method Name : " + methodName);
 
         }
     }
@@ -93,11 +111,12 @@ public class RpcFuture extends CompletableFuture<Object> {
         // 释放锁
         sync.release(1);
 
+        // 执行回调方法
+        invokeCallbacks();
+
         long responseTime = System.currentTimeMillis() - startTime;
         if (responseTime > this.responseTimeThread) {
-            logger.warn("Serivice Response time is too slow. Request Id = " + responseRpcProtocol.getHeader().getRequestId()
-                    + ". Response Time = " + responseTime + "ms"
-            );
+            logger.warn("Serivice Response time is too slow. Request Id = " + responseRpcProtocol.getHeader().getRequestId() + ". Response Time = " + responseTime + "ms");
         }
 
     }
@@ -129,6 +148,63 @@ public class RpcFuture extends CompletableFuture<Object> {
         public boolean isDone() {
             return getState() == done;
         }
+    }
+
+
+    /**
+     * 异步执行回调方法
+     *
+     * @param callback
+     */
+    private void runCallback(final AsyncRpcCallback callback) {
+
+        // 获取响应消息体
+        final RpcResponse response = this.responseRpcProtocol.getBody();
+
+        // 开启线程池提交任务
+        ClientThreadPool.submit(() -> {
+            if (!response.isError()) {
+                callback.onSuccess(response.getResult());
+            } else {
+                callback.onException(new RuntimeException("Rpc Response Error ", new Throwable(response.getError())));
+            }
+        });
+    }
+
+    /**
+     * 添加回调函数, 回调函数是在接收到响应后执行的
+     *
+     * @param callback 实现了 AsyncRpcCallback 接口的类的实例对象
+     * @return RpcFuture 对象
+     */
+    public RpcFuture addCallback(AsyncRpcCallback callback) {
+        lock.lock();
+        try {
+            if (isDone()) {
+                addCallback(callback);
+            } else {
+                // 暂时添加到集合中
+                pendingCallbacks.add(callback);
+            }
+        } finally {
+            lock.unlock();
+        }
+        return this;
+    }
+
+    /**
+     * 依次执行pendingCallbacks集合中的回调接口的方法
+     */
+    public void invokeCallbacks() {
+        lock.lock();
+        try {
+            for (AsyncRpcCallback callback : pendingCallbacks) {
+                runCallback(callback);
+            }
+        } finally {
+            lock.unlock();
+        }
+
     }
 }
 
