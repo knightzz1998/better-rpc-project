@@ -198,7 +198,10 @@ public class RpcFuture extends CompletableFuture<Object> {
     public void invokeCallbacks() {
         lock.lock();
         try {
-            for (AsyncRpcCallback callback : pendingCallbacks) {
+            // TODO 这里为什么要加 final ?
+            // 它在循环的每次迭代中都是不可变的。如果在循环体中尝试修改 callback 的值，代码将无法通过编译
+            for (final AsyncRpcCallback callback : pendingCallbacks) {
+                // 这里如果令 callback = null , 就无法通过编译
                 runCallback(callback);
             }
         } finally {

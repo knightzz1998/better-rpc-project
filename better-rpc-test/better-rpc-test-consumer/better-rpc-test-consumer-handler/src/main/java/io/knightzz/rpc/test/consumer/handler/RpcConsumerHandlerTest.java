@@ -4,6 +4,7 @@ import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.header.RpcHeaderFactory;
 import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knigthzz.rpc.consumer.common.RpcConsumer;
+import io.knigthzz.rpc.consumer.common.callback.AsyncRpcCallback;
 import io.knigthzz.rpc.consumer.common.context.RpcContext;
 import io.knigthzz.rpc.consumer.common.future.RpcFuture;
 import org.slf4j.Logger;
@@ -26,7 +27,21 @@ public class RpcConsumerHandlerTest {
     public static void testSync() throws Exception {
         RpcConsumer consumer = RpcConsumer.getInstance();
         RpcFuture rpcFuture = consumer.sendRequest(getRpcRequestProtocol());
+        // 添加回调函数
+        rpcFuture.addCallback(new AsyncRpcCallback() {
+            @Override
+            public void onSuccess(Object result) {
+                logger.info("从服务消费者获到的数据 ==> {}" , result);
+            }
+
+            @Override
+            public void onException(Exception e) {
+                logger.error("抛出异常 ==> ", e);
+            }
+        });
         logger.info("从消费者获取到的数据 ==> {}", rpcFuture.get());
+        // 阻塞, 不然回调方法还没执行, 线程池就关闭了
+        Thread.sleep(200);
         consumer.close();
     }
 
@@ -36,6 +51,7 @@ public class RpcConsumerHandlerTest {
         protocol.getBody().setAsync(true);
 
         consumer.sendRequest(protocol);
+
 
         RpcFuture future = RpcContext.getContext().getRpcFuture();
         logger.info("从消费者获取到的数据 ==> {}", future.get());
@@ -53,7 +69,7 @@ public class RpcConsumerHandlerTest {
     }
 
     public static void main(String[] args) throws Exception {
-        testAsync();
+        testSync();
     }
 
     private static RpcProtocol<RpcRequest> getRpcRequestProtocol() {
@@ -67,7 +83,7 @@ public class RpcConsumerHandlerTest {
         request.setParameters(new Object[]{"knightzz"});
         request.setParameterTypes(new Class[]{String.class});
         request.setVersion("1.0.0");
-        request.setAsync(true);
+        request.setAsync(false);
         request.setOneway(false);
         protocol.setBody(request);
         return protocol;
