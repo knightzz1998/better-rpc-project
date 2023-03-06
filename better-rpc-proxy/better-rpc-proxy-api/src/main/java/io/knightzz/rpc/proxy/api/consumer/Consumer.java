@@ -18,6 +18,7 @@ public interface Consumer {
      * 消费者发送Request请求,
      * @param protocol 封装 RpcProtocol 协议对象
      * @return 响应
+     * @exception 异常
      */
-    RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol);
+    RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol) throws Exception;
 }

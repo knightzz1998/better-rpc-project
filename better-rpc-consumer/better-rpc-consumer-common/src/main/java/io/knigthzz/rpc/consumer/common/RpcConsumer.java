@@ -81,6 +81,7 @@ public class RpcConsumer implements Consumer {
         ClientThreadPool.shutdown();
     }
 
+    @Override
     public RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol) throws Exception {
 
         // TODO 这里的IP地址暂时写死, 后面引入注册中心的时候从注册中心获取
