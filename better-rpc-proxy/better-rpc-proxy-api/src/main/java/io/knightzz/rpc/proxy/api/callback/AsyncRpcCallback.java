@@ -1,4 +1,4 @@
-package io.knigthzz.rpc.consumer.common.callback;
+package io.knightzz.rpc.proxy.api.callback;
 
 /**
  * @author 王天赐

@@ -6,7 +6,7 @@ import io.knightzz.rpc.protocol.header.RpcHeader;
 import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knightzz.rpc.protocol.response.RpcResponse;
 import io.knigthzz.rpc.consumer.common.context.RpcContext;
-import io.knigthzz.rpc.consumer.common.future.RpcFuture;
+import io.knightzz.rpc.proxy.api.future.RpcFuture;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;

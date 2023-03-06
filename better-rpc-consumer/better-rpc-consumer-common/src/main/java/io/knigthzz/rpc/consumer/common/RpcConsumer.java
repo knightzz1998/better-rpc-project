@@ -3,7 +3,8 @@ package io.knigthzz.rpc.consumer.common;
 import io.knightzz.rpc.common.threadpool.ClientThreadPool;
 import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.request.RpcRequest;
-import io.knigthzz.rpc.consumer.common.future.RpcFuture;
+import io.knightzz.rpc.proxy.api.consumer.Consumer;
+import io.knightzz.rpc.proxy.api.future.RpcFuture;
 import io.knigthzz.rpc.consumer.common.handler.RpcConsumerHandler;
 import io.knigthzz.rpc.consumer.common.initializer.RpcConsumerInitializer;
 import io.netty.bootstrap.Bootstrap;
@@ -26,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @github <a href="https://github.com/knightzz1998">https://github.com/knightzz1998</a>
  * @create: 2023-02-22 15:11
  */
-public class RpcConsumer {
+public class RpcConsumer implements Consumer {
 
     private final Logger logger = LoggerFactory.getLogger(RpcConsumer.class);
     /**

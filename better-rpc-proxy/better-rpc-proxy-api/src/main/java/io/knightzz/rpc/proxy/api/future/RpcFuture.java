@@ -1,10 +1,10 @@
-package io.knigthzz.rpc.consumer.common.future;
+package io.knightzz.rpc.proxy.api.future;
 
 import io.knightzz.rpc.common.threadpool.ClientThreadPool;
 import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knightzz.rpc.protocol.response.RpcResponse;
-import io.knigthzz.rpc.consumer.common.callback.AsyncRpcCallback;
+import io.knightzz.rpc.proxy.api.callback.AsyncRpcCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

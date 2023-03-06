@@ -1,6 +1,6 @@
 package io.knigthzz.rpc.consumer.common.context;
 
-import io.knigthzz.rpc.consumer.common.future.RpcFuture;
+import io.knightzz.rpc.proxy.api.future.RpcFuture;
 
 /**
  * @author 王天赐

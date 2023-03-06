@@ -4,9 +4,9 @@ import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.header.RpcHeaderFactory;
 import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knigthzz.rpc.consumer.common.RpcConsumer;
-import io.knigthzz.rpc.consumer.common.callback.AsyncRpcCallback;
+import io.knightzz.rpc.proxy.api.callback.AsyncRpcCallback;
 import io.knigthzz.rpc.consumer.common.context.RpcContext;
-import io.knigthzz.rpc.consumer.common.future.RpcFuture;
+import io.knightzz.rpc.proxy.api.future.RpcFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

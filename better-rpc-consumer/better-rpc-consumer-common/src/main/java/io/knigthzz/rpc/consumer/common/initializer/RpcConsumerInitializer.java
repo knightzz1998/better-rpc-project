@@ -23,7 +23,6 @@ public class RpcConsumerInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel channel) throws Exception {
 
         ChannelPipeline pipeline = channel.pipeline();
-
         pipeline.addLast(new RpcEncoder());
         pipeline.addLast(new RpcDecoder());
         pipeline.addLast(new RpcConsumerHandler());
