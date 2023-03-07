@@ -140,6 +140,8 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
         request.setVersion(this.serviceVersion);
         request.setParameters(args);
         request.setGroup(this.serviceGroup);
+        request.setAsync(this.async);
+        request.setOneway(this.oneway);
 
         Class[] parameterTypes = new Class[args.length];
         for (int i = 0; i < args.length; i++) {
