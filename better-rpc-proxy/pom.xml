@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>better-rpc-proxy-api</module>
+        <module>better-rpc-proxy-jdk</module>
     </modules>
 
     <properties>
