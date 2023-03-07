@@ -1,5 +1,7 @@
 package io.knightzz.rpc.proxy.jdk;
 
+import io.knightzz.rpc.proxy.api.BaseProxyFactory;
+import io.knightzz.rpc.proxy.api.ProxyFactory;
 import io.knightzz.rpc.proxy.api.consumer.Consumer;
 import io.knightzz.rpc.proxy.api.object.ObjectProxy;
 
@@ -14,47 +16,7 @@ import java.lang.reflect.Proxy;
  * @github <a href="https://github.com/knightzz1998">https://github.com/knightzz1998</a>
  * @create: 2023-03-06 15:16
  */
-public class JdkProxyFactory<T> {
-
-    private String serviceVersion;
-    /**
-     * 服务分组
-     */
-    private String serviceGroup;
-    /**
-     * 超时时间，默认15s
-     */
-    private long timeout = 15000;
-    /**
-     * 服务消费者
-     */
-    private Consumer consumer;
-    /**
-     * 序列化类型
-     */
-    private String serializationType;
-
-    /**
-     * 是否异步调用
-     */
-    private boolean async;
-
-    /**
-     * 是否单向调用
-     */
-    private boolean oneway;
-
-    public JdkProxyFactory(String serviceVersion, String serviceGroup, long timeout,
-                           Consumer consumer, String serializationType,
-                           boolean async, boolean oneway) {
-        this.serviceVersion = serviceVersion;
-        this.serviceGroup = serviceGroup;
-        this.timeout = timeout;
-        this.consumer = consumer;
-        this.serializationType = serializationType;
-        this.async = async;
-        this.oneway = oneway;
-    }
+public class JdkProxyFactory<T> extends BaseProxyFactory<T> implements ProxyFactory {
 
     /**
      * 获取代理对象
@@ -64,13 +26,7 @@ public class JdkProxyFactory<T> {
      * @return 生成的代理对象
      */
     public <T> T getProxy(Class<T> clazz) {
-
-        ObjectProxy<T> objectProxy = new ObjectProxy<>(clazz, serviceVersion, serviceGroup,
-                consumer, serializationType, timeout, async, oneway);
-        return (T) Proxy.newProxyInstance(
-                clazz.getClassLoader(), new Class<?>[]{clazz},
-                objectProxy
-        );
-
+        return (T) Proxy.newProxyInstance(clazz.getClassLoader(),
+                new Class[]{clazz}, objectProxy);
     }
 }
