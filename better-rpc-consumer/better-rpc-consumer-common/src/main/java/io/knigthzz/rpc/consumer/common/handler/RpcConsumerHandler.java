@@ -127,13 +127,12 @@ public class RpcConsumerHandler extends SimpleChannelInboundHandler<RpcProtocol<
      * @return RpcFuture 对象
      */
     public RpcFuture sendRequestAsync(RpcProtocol<RpcRequest> rpcRequestRpcProtocol) {
-
         RpcFuture rpcFuture = this.getRpcFuture(rpcRequestRpcProtocol);
         // 将RpcFuture对象添加到 RpcContext
         RpcContext context = RpcContext.getContext();
         context.setRpcFuture(rpcFuture);
         channel.writeAndFlush(rpcRequestRpcProtocol);
-        return null;
+        return rpcFuture;
     }
 
     /**
