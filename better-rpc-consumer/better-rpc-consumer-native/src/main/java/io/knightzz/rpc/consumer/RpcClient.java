@@ -1,5 +1,7 @@
 package io.knightzz.rpc.consumer;
 
+import io.knightzz.rpc.proxy.api.async.IAsyncObjectProxy;
+import io.knightzz.rpc.proxy.api.object.ObjectProxy;
 import io.knightzz.rpc.proxy.jdk.JdkProxyFactory;
 import io.knigthzz.rpc.consumer.common.RpcConsumer;
 import org.slf4j.Logger;
@@ -75,5 +77,12 @@ public class RpcClient {
 
     public void shutdown() {
         RpcConsumer.getInstance().close();
+    }
+
+    public <T> IAsyncObjectProxy createAsync(Class<T> interfaceClass) {
+
+        return new ObjectProxy<T>(interfaceClass, serviceVersion,
+                serviceGroup, RpcConsumer.getInstance(),
+                serializationType, timeout, async, oneway);
     }
 }
