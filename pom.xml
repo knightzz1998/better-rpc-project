@@ -19,6 +19,7 @@
         <module>better-rpc-codec</module>
         <module>better-rpc-consumer</module>
         <module>better-rpc-proxy</module>
+        <module>better-rpc-registry</module>
     </modules>
 
     <properties>
