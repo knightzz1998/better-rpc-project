@@ -1,12 +1,9 @@
 package io.knightzz.rpc.provider;
 
-import io.knightzz.rpc.common.scanner.server.RpcServiceScanner;
+import io.knightzz.rpc.provider.common.scanner.RpcServiceScanner;
 import io.knightzz.rpc.provider.common.server.base.BaseServer;
-import org.apache.log4j.lf5.LF5Appender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * @author 王天赐
@@ -21,11 +18,14 @@ public class RpcSingleServer extends BaseServer {
 
     private final Logger logger = LoggerFactory.getLogger(RpcSingleServer.class);
 
-    public RpcSingleServer(String serverAddress, String packageName, String reflectType) {
-        super(serverAddress, reflectType);
+    public RpcSingleServer(String serverAddress, String registryAddress,String registryType,
+                           String scanPackage,
+                           String reflectType) {
+        // 调用父类的构造函数
+        super(serverAddress, registryAddress, registryType, reflectType);
         try {
             this.handlerMap = RpcServiceScanner.
-                    doScannerWithRpcServiceAnnotationFilterAndRegistryService(packageName);
+                    doScannerWithRpcServiceAnnotationFilterAndRegistryService(this.host,this.port, scanPackage,this.registryService);
         } catch (Exception e) {
             logger.debug("Rpc Server init error", e);
         }

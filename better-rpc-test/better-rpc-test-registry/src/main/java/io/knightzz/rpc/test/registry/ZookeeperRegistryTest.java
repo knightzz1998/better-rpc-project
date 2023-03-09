@@ -36,6 +36,7 @@ public class ZookeeperRegistryTest {
 
     @Test
     public void testRegister() throws Exception {
+        System.out.println(serviceMeta);
         this.registryService.register(serviceMeta);
     }
 
@@ -48,7 +49,7 @@ public class ZookeeperRegistryTest {
     public void testDiscovery() throws Exception {
 
 
-        ServiceMeta discovery = this.registryService.discovery("better_rpc",
+        ServiceMeta discovery = this.registryService.discovery(RegistryService.class.getName(),
                 "knightzz".hashCode());
         System.out.println(discovery);
     }

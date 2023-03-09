@@ -4,6 +4,9 @@ import io.knightzz.rpc.codec.RpcDecoder;
 import io.knightzz.rpc.codec.RpcEncoder;
 import io.knightzz.rpc.provider.common.handler.RpcProviderHandler;
 import io.knightzz.rpc.provider.common.server.api.Server;
+import io.knightzz.rpc.registry.api.RegistryService;
+import io.knightzz.rpc.registry.api.config.RegistryConfig;
+import io.knightzz.rpc.registry.zookeeper.ZookeeperRegistryService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -31,6 +34,11 @@ public class BaseServer implements Server {
     protected final Logger logger = LoggerFactory.getLogger(BaseServer.class);
 
     /**
+     * 注册中心服务实例
+     */
+    protected RegistryService registryService;
+
+    /**
      * 存储服务执行类的实例, key由 服务名称#版本号#服务分组 组成
      */
     protected Map<String, Object> handlerMap = new HashMap<>();
@@ -49,7 +57,11 @@ public class BaseServer implements Server {
      */
     protected int port = 27110;
 
-    public BaseServer(String serverAddress, String reflectType) {
+
+    public BaseServer(String serverAddress,
+                      String registryAddress,
+                      String registryType,
+                      String reflectType) {
 
         if (!StringUtils.isEmpty(serverAddress)) {
             // 获取id和端口
@@ -58,6 +70,30 @@ public class BaseServer implements Server {
             this.port = Integer.parseInt(serverArray[1]);
         }
         this.reflectType = reflectType;
+        this.registryService = getRegistryService(registryAddress, registryType);
+    }
+
+    /**
+     * 实例化 ZookeeperRegistryService
+     * @param serverAddress 地址
+     * @param registryType 注册类型
+     * @return RegistryService 实例对象
+     */
+    public RegistryService getRegistryService(String registryAddress, String registryType) {
+        // TODO 扩展SPI
+        RegistryService registryService = null;
+
+        RegistryConfig registryConfig = new RegistryConfig(registryAddress, registryType);
+
+        try {
+            registryService = new ZookeeperRegistryService();
+            // 初始化
+            registryService.init(registryConfig);
+        } catch (Exception e) {
+            logger.error("Zookeeper Registry Service init error ", e);
+        }
+
+        return registryService;
     }
 
     @Override

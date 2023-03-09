@@ -30,12 +30,12 @@ public class ZookeeperRegistryService implements RegistryService {
     /**
      * 初始化CuratorFrame客户端时,进行连接重试的间隔时间
      */
-    private static final int BASE_SLEEP_TIME_MS = 1000;
+    public static final int BASE_SLEEP_TIME_MS = 1000;
 
     /**
      * 初始化CuratorFrame客户端时,进行连接重试的最大重试次数
      */
-    private static final int MAX_RETRIES = 3;
+    public static final int MAX_RETRIES = 3;
 
     /**
      * 服务注册Zookeeper根路径
@@ -116,7 +116,6 @@ public class ZookeeperRegistryService implements RegistryService {
 
     @Override
     public void init(RegistryConfig registryConfig) throws Exception {
-        RegistryService.super.init(registryConfig);
         // 失败重试3次. 每次重试时间间隔呈指数增长
         ExponentialBackoffRetry backoffRetry = new ExponentialBackoffRetry(BASE_SLEEP_TIME_MS, MAX_RETRIES);
         CuratorFramework client = CuratorFrameworkFactory.newClient(registryConfig.getRegistryAddress(), backoffRetry);
@@ -132,6 +131,6 @@ public class ZookeeperRegistryService implements RegistryService {
                 .basePath(ZK_BASE_PATH)
                 .build();
 
-        this.serviceDiscovery.close();
+        this.serviceDiscovery.start();
     }
 }

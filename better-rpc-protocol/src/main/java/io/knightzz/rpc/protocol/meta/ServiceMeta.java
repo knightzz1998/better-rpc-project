@@ -85,5 +85,16 @@ public class ServiceMeta implements Serializable {
     public void setServicePort(int servicePort) {
         this.servicePort = servicePort;
     }
+
+    @Override
+    public String toString() {
+        return "ServiceMeta{" +
+                "serviceName='" + serviceName + '\'' +
+                ", serviceVersion='" + serviceVersion + '\'' +
+                ", serviceGroup='" + serviceGroup + '\'' +
+                ", serviceAddress='" + serviceAddress + '\'' +
+                ", servicePort=" + servicePort +
+                '}';
+    }
 }
 
