@@ -1,6 +1,8 @@
 package io.knightzz.rpc.registry.zookeeper;
 
 import io.knightzz.rpc.common.helper.RpcServiceHelper;
+import io.knightzz.rpc.loadbalancer.api.ServiceLoadBalancer;
+import io.knightzz.rpc.loadbalancer.random.RandomServiceLoadBalancer;
 import io.knightzz.rpc.protocol.meta.ServiceMeta;
 import io.knightzz.rpc.registry.api.RegistryService;
 import io.knightzz.rpc.registry.api.config.RegistryConfig;
@@ -42,9 +44,15 @@ public class ZookeeperRegistryService implements RegistryService {
      */
     public static final String ZK_BASE_PATH = "/better_rpc";
 
+    /**
+     * 服务发现接口
+     */
     private ServiceDiscovery<ServiceMeta> serviceDiscovery;
 
-
+    /**
+     * 负载均衡接口
+     */
+    private ServiceLoadBalancer<ServiceInstance<ServiceMeta>> serviceLoadBalancer;
     @Override
     public void register(ServiceMeta serviceMeta) throws Exception {
 
@@ -88,25 +96,15 @@ public class ZookeeperRegistryService implements RegistryService {
         Collection<ServiceInstance<ServiceMeta>>
                 serviceInstances = serviceDiscovery.queryForInstances(serviceName);
 
-        ServiceInstance<ServiceMeta> instance = this.selectOneServiceInstance((List<ServiceInstance<ServiceMeta>>) serviceInstances);
+        // 使用自定义负载均衡算法
+        ServiceInstance<ServiceMeta> instance = this.serviceLoadBalancer.select(
+                (List<ServiceInstance<ServiceMeta>>) serviceInstances, invokerHashCode
+        );
 
         if (instance != null) {
             return instance.getPayload();
         }
         return null;
-    }
-
-    private ServiceInstance<ServiceMeta> selectOneServiceInstance(List<ServiceInstance<ServiceMeta>> serviceInstances) {
-
-        if (serviceInstances == null || serviceInstances.isEmpty()) {
-            return null;
-        }
-
-        // ? 随机选择
-        Random random = new Random();
-        int index = random.nextInt(serviceInstances.size());
-
-        return serviceInstances.get(index);
     }
 
     @Override
@@ -116,6 +114,10 @@ public class ZookeeperRegistryService implements RegistryService {
 
     @Override
     public void init(RegistryConfig registryConfig) throws Exception {
+
+        // 实例化负载均衡类
+        this.serviceLoadBalancer = new RandomServiceLoadBalancer<ServiceInstance<ServiceMeta>>();
+
         // 失败重试3次. 每次重试时间间隔呈指数增长
         ExponentialBackoffRetry backoffRetry = new ExponentialBackoffRetry(BASE_SLEEP_TIME_MS, MAX_RETRIES);
         CuratorFramework client = CuratorFrameworkFactory.newClient(registryConfig.getRegistryAddress(), backoffRetry);

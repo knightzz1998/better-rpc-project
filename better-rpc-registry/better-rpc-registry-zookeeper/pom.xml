@@ -18,6 +18,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>cn.knightzz</groupId>
+            <artifactId>better-rpc-loadbalancer-random</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Zookeeper 的高级API -->
         <dependency>
             <groupId>org.apache.curator</groupId>

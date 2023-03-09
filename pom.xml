@@ -20,6 +20,7 @@
         <module>better-rpc-consumer</module>
         <module>better-rpc-proxy</module>
         <module>better-rpc-registry</module>
+        <module>better-rpc-loadbalancer</module>
     </modules>
 
     <properties>
