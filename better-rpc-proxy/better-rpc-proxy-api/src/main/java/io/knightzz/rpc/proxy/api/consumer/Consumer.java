@@ -3,6 +3,7 @@ package io.knightzz.rpc.proxy.api.consumer;
 import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knightzz.rpc.proxy.api.future.RpcFuture;
+import io.knightzz.rpc.registry.api.RegistryService;
 
 /**
  * @author 王天赐
@@ -20,5 +21,5 @@ public interface Consumer {
      * @return 响应
      * @exception 异常
      */
-    RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol) throws Exception;
+    RpcFuture sendRequest(RpcProtocol<RpcRequest> protocol, RegistryService registryService) throws Exception;
 }

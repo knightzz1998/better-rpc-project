@@ -13,8 +13,7 @@ import java.io.Serializable;
  */
 public class ServiceMeta implements Serializable {
 
-    private static final long serialVersionUID = -104852284433320820L;
-
+    private static final long serialVersionUID = -6493725633061434631L;
     /**
      * 服务名称
      */
@@ -37,6 +36,8 @@ public class ServiceMeta implements Serializable {
      */
     private int servicePort;
 
+    public ServiceMeta() {
+    }
 
     public ServiceMeta(String serviceName, String serviceVersion, String serviceGroup, String serviceAddress, int servicePort) {
         this.serviceName = serviceName;

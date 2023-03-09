@@ -1,12 +1,17 @@
 package io.knightzz.rpc.consumer;
 
+import io.knightzz.rpc.common.exception.RegistryException;
 import io.knightzz.rpc.proxy.api.async.IAsyncObjectProxy;
 import io.knightzz.rpc.proxy.api.config.ProxyConfig;
 import io.knightzz.rpc.proxy.api.object.ObjectProxy;
 import io.knightzz.rpc.proxy.jdk.JdkProxyFactory;
+import io.knightzz.rpc.registry.api.RegistryService;
+import io.knightzz.rpc.registry.api.config.RegistryConfig;
+import io.knightzz.rpc.registry.zookeeper.ZookeeperRegistryService;
 import io.knigthzz.rpc.consumer.common.RpcConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 /**
  * @author 王天赐
@@ -51,13 +56,38 @@ public class RpcClient {
      */
     private boolean oneway;
 
-    public RpcClient(String serviceVersion, String serviceGroup, long timeout, String serializationType, boolean async, boolean oneway) {
+    private RegistryService registryService;
+
+    public RpcClient(String registryAddress, String registryType, String serviceVersion, String serviceGroup, long timeout,
+                     String serializationType,
+                     boolean async, boolean oneway) {
         this.serviceVersion = serviceVersion;
         this.serviceGroup = serviceGroup;
         this.timeout = timeout;
         this.serializationType = serializationType;
         this.async = async;
         this.oneway = oneway;
+        this.registryService = this.getRegistryService(registryAddress, registryType);
+    }
+
+    private RegistryService getRegistryService(String registryAddress, String registryType) {
+
+        if (StringUtils.isEmpty(registryType)) {
+            throw new RuntimeException("registry Type is null ");
+        }
+
+        RegistryService registryService = new ZookeeperRegistryService();
+
+        RegistryConfig registryConfig = new RegistryConfig(registryAddress, registryType);
+
+        try {
+            registryService.init(registryConfig);
+        } catch (Exception e) {
+            logger.error("Rpc registry service init throw exception ", e);
+            throw new RegistryException(e.getMessage(), e);
+        }
+
+        return registryService;
     }
 
     /**
@@ -72,7 +102,7 @@ public class RpcClient {
         JdkProxyFactory<Object> jdkProxyFactory = new JdkProxyFactory<>();
 
         ProxyConfig<T> proxyConfig = new ProxyConfig<>(interfaceClass, serviceVersion, serviceGroup,
-                RpcConsumer.getInstance(), timeout, serializationType, async, oneway);
+                RpcConsumer.getInstance(), timeout, serializationType, async, oneway, registryService);
 
         // 初始化
         jdkProxyFactory.init(proxyConfig);
@@ -87,6 +117,6 @@ public class RpcClient {
 
         return new ObjectProxy<T>(interfaceClass, serviceVersion,
                 serviceGroup, RpcConsumer.getInstance(),
-                serializationType, timeout, async, oneway);
+                serializationType, timeout, async, oneway, registryService);
     }
 }

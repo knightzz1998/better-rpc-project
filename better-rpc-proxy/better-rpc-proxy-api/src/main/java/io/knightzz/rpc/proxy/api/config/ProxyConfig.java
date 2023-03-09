@@ -1,6 +1,7 @@
 package io.knightzz.rpc.proxy.api.config;
 
 import io.knightzz.rpc.proxy.api.consumer.Consumer;
+import io.knightzz.rpc.registry.api.RegistryService;
 
 import java.io.Serializable;
 
@@ -57,10 +58,12 @@ public class ProxyConfig<T> implements Serializable {
      */
     private boolean oneway;
 
+    private RegistryService registryService;
+
     public ProxyConfig(Class<T> clazz, String serviceVersion,
                        String serviceGroup, Consumer consumer,
                        long timeout, String serializationType,
-                       boolean async, boolean oneway) {
+                       boolean async, boolean oneway, RegistryService registryService) {
         this.clazz = clazz;
         this.serviceVersion = serviceVersion;
         this.serviceGroup = serviceGroup;
@@ -69,6 +72,15 @@ public class ProxyConfig<T> implements Serializable {
         this.serializationType = serializationType;
         this.async = async;
         this.oneway = oneway;
+        this.registryService = registryService;
+    }
+
+    public RegistryService getRegistryService() {
+        return registryService;
+    }
+
+    public void setRegistryService(RegistryService registryService) {
+        this.registryService = registryService;
     }
 
     public Class<T> getClazz() {

@@ -2,6 +2,7 @@ package io.knightzz.rpc.proxy.api;
 
 import io.knightzz.rpc.proxy.api.config.ProxyConfig;
 import io.knightzz.rpc.proxy.api.object.ObjectProxy;
+import io.knightzz.rpc.registry.api.RegistryService;
 
 /**
  * @author 王天赐
@@ -27,7 +28,8 @@ public abstract class BaseProxyFactory<T> implements ProxyFactory {
                 proxyConfig.getSerializationType(),
                 proxyConfig.getTimeout(),
                 proxyConfig.isAsync(),
-                proxyConfig.isOneway()
+                proxyConfig.isOneway(),
+                proxyConfig.getRegistryService()
         );
 
     }

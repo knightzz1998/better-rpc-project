@@ -29,6 +29,12 @@
             <artifactId>better-rpc-proxy-jdk</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.knightzz</groupId>
+            <artifactId>better-rpc-registry-zookeeper</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

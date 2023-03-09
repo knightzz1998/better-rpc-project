@@ -6,6 +6,7 @@ import io.knightzz.rpc.protocol.request.RpcRequest;
 import io.knightzz.rpc.proxy.api.async.IAsyncObjectProxy;
 import io.knightzz.rpc.proxy.api.consumer.Consumer;
 import io.knightzz.rpc.proxy.api.future.RpcFuture;
+import io.knightzz.rpc.registry.api.RegistryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,8 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
 
     private boolean oneway;
 
+    private RegistryService registryService;
+
     public ObjectProxy(Class<?> clazz) {
         this.clazz = clazz;
     }
@@ -47,7 +50,7 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
     public ObjectProxy(Class<?> clazz, String serviceVersion,
                        String serviceGroup, Consumer consumer,
                        String serializationType, long timeout,
-                       boolean async, boolean oneway) {
+                       boolean async, boolean oneway, RegistryService registryService) {
         this.clazz = clazz;
         this.serviceVersion = serviceVersion;
         this.serviceGroup = serviceGroup;
@@ -56,6 +59,7 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
         this.timeout = timeout;
         this.async = async;
         this.oneway = oneway;
+        this.registryService = registryService;
     }
 
     @Override
@@ -103,7 +107,7 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
         }
 
         // 调用当前消费者类, 发送请求
-        RpcFuture rpcFuture = this.consumer.sendRequest(requestRpcProtocol);
+        RpcFuture rpcFuture = this.consumer.sendRequest(requestRpcProtocol, this.registryService);
 
         // 单向请求
         if (rpcFuture == null) {
@@ -119,7 +123,7 @@ public class ObjectProxy<T> implements IAsyncObjectProxy, InvocationHandler {
 
         RpcFuture rpcFuture = null;
         try {
-            rpcFuture = this.consumer.sendRequest(requestRpcProtocol);
+            rpcFuture = this.consumer.sendRequest(requestRpcProtocol, this.registryService);
         } catch (Exception e) {
             logger.error("async all throws exception ", e);
         }
