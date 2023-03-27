@@ -2,6 +2,7 @@ package io.knightzz.rpc.spi.factory;
 
 import io.knightzz.rpc.spi.annotation.SPI;
 import io.knightzz.rpc.spi.annotation.SPIClass;
+import io.knightzz.rpc.spi.loader.ExtensionLoader;
 
 import java.util.Optional;
 
@@ -21,19 +22,15 @@ public class SpiExtensionFactory implements ExtensionFactory{
     @Override
     public <T> T getExtension(final String key, final Class<T> clazz) {
 
-        Optional<Class<T>> classOptional = Optional.ofNullable(clazz);
+        // 1. 校验 clazz 是否为null
 
-        // 把不是接口的 Class 对象过滤掉
-        classOptional = classOptional.filter((cls) -> {
-            return cls.isInterface();
-        });
-
-        // 校验是否有 SPI 注解
-        classOptional = classOptional.filter((cls) -> {
-            return cls.isAnnotationPresent(SPI.class);
-        });
-
-
-        return null;
+        return Optional.ofNullable(clazz)
+                .filter((cls) -> cls.isInterface())
+                .filter(cls -> cls.isAnnotationPresent(SPI.class))
+                .map(ExtensionLoader::getExtensionLoader)
+                //.map((cls) -> ExtensionLoader.getExtensionLoader(cls))
+                .map(ExtensionLoader::getDefaultSpiClassInstance)
+                // .map((cls) -> cls.getDefaultSpiClassInstance())
+                .orElse(null);
     }
 }
