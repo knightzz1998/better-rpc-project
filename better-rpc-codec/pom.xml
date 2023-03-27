@@ -25,14 +25,18 @@
         </dependency>
         <dependency>
             <groupId>cn.knightzz</groupId>
+            <artifactId>better-rpc-serialization-json</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.knightzz</groupId>
             <artifactId>better-rpc-protocol</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.knightzz</groupId>
             <artifactId>better-rpc-spi</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

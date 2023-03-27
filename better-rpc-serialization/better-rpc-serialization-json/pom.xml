@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>better-rpc-serialization-api</artifactId>
+    <artifactId>better-rpc-serialization-json</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -17,20 +17,23 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
+
         <dependency>
-            <groupId>cn.knightzz</groupId>
-            <artifactId>better-rpc-spi</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>cn.knightzz</groupId>
-            <artifactId>better-rpc-common</artifactId>
+            <artifactId>better-rpc-serialization-api</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
 
 </project>
-
-
-
-

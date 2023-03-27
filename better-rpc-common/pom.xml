@@ -23,6 +23,11 @@
             <artifactId>better-rpc-annotation</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.knightzz</groupId>
+            <artifactId>better-rpc-constants</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,5 +1,6 @@
 package io.knightzz.rpc.serialization.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.knightzz.rpc.constants.RpcConstants;
 import io.knightzz.rpc.spi.annotation.SPI;
 
@@ -21,7 +22,7 @@ public interface Serialization {
      * @return 序列化的结果, 以byte数组存储
      * @param <T> 参数类型
      */
-    <T> byte[] serialization(T obj);
+    <T> byte[] serialization(T obj) throws JsonProcessingException;
 
     /**
      * 反序列化, 将byte[]数组转换成对象
