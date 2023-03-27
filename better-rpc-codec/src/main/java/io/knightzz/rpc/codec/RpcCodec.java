@@ -1,7 +1,7 @@
 package io.knightzz.rpc.codec;
 
 import io.knightzz.rpc.serialization.api.Serialization;
-import io.knightzz.rpc.serialization.jdk.JdkSerialization;
+import io.knightzz.rpc.spi.loader.ExtensionLoader;
 
 /**
  * @author 王天赐
@@ -15,10 +15,11 @@ import io.knightzz.rpc.serialization.jdk.JdkSerialization;
 public interface RpcCodec {
 
     /**
-     * 获取基础JDK实现的序列化对象
-     * @return JdkSerialization 的对象
+     * 通过SPI机制实现序列化
+     * @param serializationType 序列化类型
+     * @return 序列化的对象
      */
-    default Serialization getJdkSerialization() {
-        return new JdkSerialization();
+    default Serialization getSerialization(String serializationType) {
+        return ExtensionLoader.getExtension(Serialization.class, serializationType);
     }
 }

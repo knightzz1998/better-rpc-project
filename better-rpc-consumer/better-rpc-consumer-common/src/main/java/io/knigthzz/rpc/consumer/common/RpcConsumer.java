@@ -90,7 +90,8 @@ public class RpcConsumer implements Consumer {
 
         // 获取 Request
         RpcRequest request = protocol.getBody();
-        String serviceKey = RpcServiceHelper.buildServiceKey(request.getClassName(), request.getVersion(), request.getGroup());
+        String serviceKey = RpcServiceHelper.buildServiceKey(request.getClassName(),
+                request.getVersion(), request.getGroup());
 
         Object[] parameters = request.getParameters();
         // 获取 hashCode

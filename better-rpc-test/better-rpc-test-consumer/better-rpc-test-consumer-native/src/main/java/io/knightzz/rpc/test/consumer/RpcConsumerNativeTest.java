@@ -31,7 +31,7 @@ public class RpcConsumerNativeTest {
 
         rpcClient = new RpcClient(
                 "127.0.0.1:2181", "zookeeper",
-                "1.0.0", "knightzz", 3000, "jdk"
+                "1.0.0", "knightzz", 0, "jdk"
                 , false, false);
     }
 

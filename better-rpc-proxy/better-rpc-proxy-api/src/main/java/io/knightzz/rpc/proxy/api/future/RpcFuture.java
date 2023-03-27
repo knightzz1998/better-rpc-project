@@ -146,6 +146,7 @@ public class RpcFuture extends CompletableFuture<Object> {
         }
 
         public boolean isDone() {
+            getState();
             return getState() == done;
         }
     }

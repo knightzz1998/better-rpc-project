@@ -1,5 +1,8 @@
 package io.knightzz.rpc.serialization.api;
 
+import io.knightzz.rpc.constants.RpcConstants;
+import io.knightzz.rpc.spi.annotation.SPI;
+
 /**
  * @author 王天赐
  * @title: Serialization
@@ -9,6 +12,7 @@ package io.knightzz.rpc.serialization.api;
  * @github <a href="https://github.com/knightzz1998">https://github.com/knightzz1998</a>
  * @create: 2023-02-13 14:26
  */
+@SPI(RpcConstants.SERIALIZATION_JDK)
 public interface Serialization {
 
     /**

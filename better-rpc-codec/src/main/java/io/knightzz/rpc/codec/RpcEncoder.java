@@ -37,7 +37,7 @@ public class RpcEncoder extends MessageToByteEncoder<RpcProtocol<Object>> implem
         String serializationType = header.getSerializationType();
 
         // TODO : Serialization 是扩展点
-        Serialization serialization = getJdkSerialization();
+        Serialization serialization = getSerialization(serializationType);
         byteBuf.writeBytes(SerializationUtils.paddingString(serializationType)
                 .getBytes(StandardCharsets.UTF_8));
 
