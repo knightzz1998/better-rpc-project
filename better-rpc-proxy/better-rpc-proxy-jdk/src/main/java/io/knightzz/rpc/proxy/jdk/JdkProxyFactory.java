@@ -2,8 +2,6 @@ package io.knightzz.rpc.proxy.jdk;
 
 import io.knightzz.rpc.proxy.api.BaseProxyFactory;
 import io.knightzz.rpc.proxy.api.ProxyFactory;
-import io.knightzz.rpc.proxy.api.consumer.Consumer;
-import io.knightzz.rpc.proxy.api.object.ObjectProxy;
 import io.knightzz.rpc.spi.annotation.SPIClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

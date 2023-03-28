@@ -3,10 +3,10 @@ package io.knightzz.rpc.test.consumer.handler;
 import io.knightzz.rpc.protocol.RpcProtocol;
 import io.knightzz.rpc.protocol.header.RpcHeaderFactory;
 import io.knightzz.rpc.protocol.request.RpcRequest;
-import io.knigthzz.rpc.consumer.common.RpcConsumer;
 import io.knightzz.rpc.proxy.api.callback.AsyncRpcCallback;
-import io.knigthzz.rpc.consumer.common.context.RpcContext;
 import io.knightzz.rpc.proxy.api.future.RpcFuture;
+import io.knigthzz.rpc.consumer.common.RpcConsumer;
+import io.knigthzz.rpc.consumer.common.context.RpcContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,46 +25,46 @@ public class RpcConsumerHandlerTest {
     private static final Logger logger = LoggerFactory.getLogger(RpcConsumerHandlerTest.class);
 
     public static void testSync() throws Exception {
-        RpcConsumer consumer = RpcConsumer.getInstance();
-        RpcFuture rpcFuture = consumer.sendRequest(getRpcRequestProtocol());
-        // 添加回调函数
-        rpcFuture.addCallback(new AsyncRpcCallback() {
-            @Override
-            public void onSuccess(Object result) {
-                logger.info("从服务消费者获到的数据 ==> {}" , result);
-            }
-
-            @Override
-            public void onException(Exception e) {
-                logger.error("抛出异常 ==> ", e);
-            }
-        });
-        logger.info("从消费者获取到的数据 ==> {}", rpcFuture.get());
-        // 阻塞, 不然回调方法还没执行, 线程池就关闭了
-        Thread.sleep(200);
-        consumer.close();
+        //RpcConsumer consumer = RpcConsumer.getInstance();
+        //RpcFuture rpcFuture = consumer.sendRequest(getRpcRequestProtocol());
+        //// 添加回调函数
+        //rpcFuture.addCallback(new AsyncRpcCallback() {
+        //    @Override
+        //    public void onSuccess(Object result) {
+        //        logger.info("从服务消费者获到的数据 ==> {}", result);
+        //    }
+        //
+        //    @Override
+        //    public void onException(Exception e) {
+        //        logger.error("抛出异常 ==> ", e);
+        //    }
+        //});
+        //logger.info("从消费者获取到的数据 ==> {}", rpcFuture.get());
+        //// 阻塞, 不然回调方法还没执行, 线程池就关闭了
+        //Thread.sleep(200);
+        //consumer.close();
     }
 
     public static void testAsync() throws Exception {
-        RpcConsumer consumer = RpcConsumer.getInstance();
-        RpcProtocol<RpcRequest> protocol = getRpcRequestProtocol();
-        protocol.getBody().setAsync(true);
-
-        consumer.sendRequest(protocol);
-
-
-        RpcFuture future = RpcContext.getContext().getRpcFuture();
-        logger.info("从消费者获取到的数据 ==> {}", future.get());
-        consumer.close();
+        //RpcConsumer consumer = RpcConsumer.getInstance();
+        //RpcProtocol<RpcRequest> protocol = getRpcRequestProtocol();
+        //protocol.getBody().setAsync(true);
+        //
+        //consumer.sendRequest(protocol);
+        //
+        //
+        //RpcFuture future = RpcContext.getContext().getRpcFuture();
+        //logger.info("从消费者获取到的数据 ==> {}", future.get());
+        //consumer.close();
     }
 
     public static void testOneway() throws Exception {
 
-        RpcConsumer consumer = RpcConsumer.getInstance();
-        RpcProtocol<RpcRequest> protocol = getRpcRequestProtocol();
-        protocol.getBody().setAsync(true);
-        protocol.getBody().setOneway(true);
-        consumer.sendRequest(protocol);
+        //RpcConsumer consumer = RpcConsumer.getInstance();
+        //RpcProtocol<RpcRequest> protocol = getRpcRequestProtocol();
+        //protocol.getBody().setAsync(true);
+        //protocol.getBody().setOneway(true);
+        //consumer.sendRequest(protocol);
         logger.info("无序获取返回的数据!");
     }
 

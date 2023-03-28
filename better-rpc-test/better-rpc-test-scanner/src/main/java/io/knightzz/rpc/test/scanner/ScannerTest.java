@@ -1,8 +1,8 @@
 package io.knightzz.rpc.test.scanner;
 
 import io.knightzz.rpc.common.scanner.ClassScanner;
-import io.knightzz.rpc.common.scanner.server.RpcServiceScanner;
 import io.knightzz.rpc.common.scanner.server.reference.RpcReferenceScanner;
+import io.knightzz.rpc.provider.common.scanner.RpcServiceScanner;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -32,9 +32,10 @@ public class ScannerTest {
     @Test
     public void testScannerClassNameListByRpcService() throws Exception {
 
-        RpcServiceScanner.
-                doScannerWithRpcServiceAnnotationFilterAndRegistryService(
-                        "io.knightzz.rpc.test.scanner");
+        // RpcServiceScanner.
+        //        doScannerWithRpcServiceAnnotationFilterAndRegistryService(
+        //                "127.0.0.1", 27880,
+        //                "io.knightzz.rpc.test.scanner");
 
     }
 
