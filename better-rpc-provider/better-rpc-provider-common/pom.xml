@@ -17,6 +17,19 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
+
+        <dependency>
+            <groupId>cn.knightzz</groupId>
+            <artifactId>better-rpc-reflect-jdk</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.knightzz</groupId>
+            <artifactId>better-rpc-reflect-cglib</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>cn.knightzz</groupId>
             <artifactId>better-rpc-codec</artifactId>
