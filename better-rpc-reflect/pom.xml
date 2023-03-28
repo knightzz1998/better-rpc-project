@@ -9,11 +9,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>better-rpc-provider</artifactId>
+    <artifactId>better-rpc-reflect</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>better-rpc-provider-common</module>
-        <module>better-rpc-provider-native</module>
+        <module>better-rpc-reflect-api</module>
+        <module>better-rpc-reflect-jdk</module>
+        <module>better-rpc-reflect-cglib</module>
     </modules>
 
     <properties>
@@ -21,18 +22,5 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>cn.knightzz</groupId>
-            <artifactId>better-rpc-reflect-jdk</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.knightzz</groupId>
-            <artifactId>better-rpc-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
 
 </project>

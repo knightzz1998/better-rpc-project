@@ -19,7 +19,7 @@ public class RpcSingleServerTest {
         RpcSingleServer rpcSingleServer =
                 new RpcSingleServer("127.0.0.1:27880",
                         "127.0.0.1:2181", "zookeeper",
-                        "io.knightzz.rpc.test", "cglib");
+                        "io.knightzz.rpc.test", "jdk");
         rpcSingleServer.startNettyServer();
     }
 }

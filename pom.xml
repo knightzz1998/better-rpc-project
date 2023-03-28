@@ -22,6 +22,7 @@
         <module>better-rpc-registry</module>
         <module>better-rpc-loadbalancer</module>
         <module>better-rpc-spi</module>
+        <module>better-rpc-reflect</module>
     </modules>
 
     <properties>
