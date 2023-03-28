@@ -1,6 +1,7 @@
 package io.knightzz.rpc.proxy.api;
 
 import io.knightzz.rpc.proxy.api.config.ProxyConfig;
+import io.knightzz.rpc.spi.annotation.SPI;
 
 /**
  * @author 王天赐
@@ -11,6 +12,7 @@ import io.knightzz.rpc.proxy.api.config.ProxyConfig;
  * @github <a href="https://github.com/knightzz1998">https://github.com/knightzz1998</a>
  * @create: 2023-03-07 19:16
  */
+@SPI
 public interface ProxyFactory {
 
     /**
@@ -21,5 +23,10 @@ public interface ProxyFactory {
      */
     <T> T getProxy(Class<T> clazz);
 
+    /**
+     * 代理类初始化
+     * @param proxyConfig 代理类配置
+     * @param <T> 泛型
+     */
     default <T> void init(ProxyConfig<T> proxyConfig){};
 }

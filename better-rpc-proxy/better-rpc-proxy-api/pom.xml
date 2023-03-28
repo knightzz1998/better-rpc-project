@@ -27,5 +27,10 @@
             <artifactId>better-rpc-registry-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>cn.knightzz</groupId>
+            <artifactId>better-rpc-spi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

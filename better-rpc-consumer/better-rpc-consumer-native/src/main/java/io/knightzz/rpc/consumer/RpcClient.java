@@ -1,6 +1,7 @@
 package io.knightzz.rpc.consumer;
 
 import io.knightzz.rpc.common.exception.RegistryException;
+import io.knightzz.rpc.proxy.api.ProxyFactory;
 import io.knightzz.rpc.proxy.api.async.IAsyncObjectProxy;
 import io.knightzz.rpc.proxy.api.config.ProxyConfig;
 import io.knightzz.rpc.proxy.api.object.ObjectProxy;
@@ -8,6 +9,7 @@ import io.knightzz.rpc.proxy.jdk.JdkProxyFactory;
 import io.knightzz.rpc.registry.api.RegistryService;
 import io.knightzz.rpc.registry.api.config.RegistryConfig;
 import io.knightzz.rpc.registry.zookeeper.ZookeeperRegistryService;
+import io.knightzz.rpc.spi.loader.ExtensionLoader;
 import io.knigthzz.rpc.consumer.common.RpcConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,11 @@ import org.springframework.util.StringUtils;
 public class RpcClient {
 
     private Logger logger = LoggerFactory.getLogger(RpcClient.class);
+
+    /**
+     * 动态代理的方式
+     */
+    private String proxy;
 
     /**
      * 服务版本
@@ -58,10 +65,11 @@ public class RpcClient {
 
     private RegistryService registryService;
 
-    public RpcClient(String registryAddress, String registryType, String serviceVersion, String serviceGroup, long timeout,
+    public RpcClient(String registryAddress, String registryType, String proxy, String serviceVersion, String serviceGroup, long timeout,
                      String serializationType,
                      boolean async, boolean oneway) {
         this.serviceVersion = serviceVersion;
+        this.proxy = proxy;
         this.serviceGroup = serviceGroup;
         this.timeout = timeout;
         this.serializationType = serializationType;
@@ -99,14 +107,14 @@ public class RpcClient {
      */
     public <T> T create(Class<T> interfaceClass) {
 
-        JdkProxyFactory<Object> jdkProxyFactory = new JdkProxyFactory<>();
+        ProxyFactory proxyFactory = ExtensionLoader.getExtension(ProxyFactory.class, proxy);
 
         ProxyConfig<T> proxyConfig = new ProxyConfig<>(interfaceClass, serviceVersion, serviceGroup,
                 RpcConsumer.getInstance(), timeout, serializationType, async, oneway, registryService);
 
         // 初始化
-        jdkProxyFactory.init(proxyConfig);
-        return jdkProxyFactory.getProxy(interfaceClass);
+        proxyFactory.init(proxyConfig);
+        return proxyFactory.getProxy(interfaceClass);
     }
 
     public void shutdown() {
