@@ -20,6 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>cn.knightzz</groupId>
+            <artifactId>better-rpc-serialization-hessian2</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.knightzz</groupId>
             <artifactId>better-rpc-serialization-jdk</artifactId>
             <version>${project.version}</version>
         </dependency>

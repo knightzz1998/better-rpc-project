@@ -22,7 +22,7 @@ public interface Serialization {
      * @return 序列化的结果, 以byte数组存储
      * @param <T> 参数类型
      */
-    <T> byte[] serialization(T obj) throws JsonProcessingException;
+    <T> byte[] serialization(T obj);
 
     /**
      * 反序列化, 将byte[]数组转换成对象
