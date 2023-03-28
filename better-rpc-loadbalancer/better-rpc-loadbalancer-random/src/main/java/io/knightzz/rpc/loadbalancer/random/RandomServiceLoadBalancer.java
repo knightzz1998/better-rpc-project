@@ -1,6 +1,7 @@
 package io.knightzz.rpc.loadbalancer.random;
 
 import io.knightzz.rpc.loadbalancer.api.ServiceLoadBalancer;
+import io.knightzz.rpc.spi.annotation.SPIClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import java.util.Random;
  * @github <a href="https://github.com/knightzz1998">https://github.com/knightzz1998</a>
  * @create: 2023-03-09 19:37
  */
+@SPIClass
 public class RandomServiceLoadBalancer<T> implements ServiceLoadBalancer<T> {
 
     private final Logger logger = LoggerFactory.getLogger(RandomServiceLoadBalancer.class);

@@ -30,7 +30,7 @@ public class RpcConsumerNativeTest {
     public void initRpcClient() {
 
         rpcClient = new RpcClient(
-                "127.0.0.1:2181", "zookeeper", "cglib",
+                "127.0.0.1:2181", "zookeeper", "random","cglib",
                 "1.0.0", "knightzz", 0, "hessian2"
                 , false, false);
     }

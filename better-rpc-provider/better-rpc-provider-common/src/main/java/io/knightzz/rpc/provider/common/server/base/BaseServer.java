@@ -57,11 +57,11 @@ public class BaseServer implements Server {
      */
     protected int port = 27110;
 
-
     public BaseServer(String serverAddress,
                       String registryAddress,
                       String registryType,
-                      String reflectType) {
+                      String reflectType,
+                      String registryLoadBalanceType) {
 
         if (!StringUtils.isEmpty(serverAddress)) {
             // 获取id和端口
@@ -70,7 +70,7 @@ public class BaseServer implements Server {
             this.port = Integer.parseInt(serverArray[1]);
         }
         this.reflectType = reflectType;
-        this.registryService = getRegistryService(registryAddress, registryType);
+        this.registryService = getRegistryService(registryAddress, registryType, registryLoadBalanceType);
     }
 
     /**
@@ -79,11 +79,11 @@ public class BaseServer implements Server {
      * @param registryType 注册类型
      * @return RegistryService 实例对象
      */
-    public RegistryService getRegistryService(String registryAddress, String registryType) {
+    public RegistryService getRegistryService(String registryAddress, String registryType,String registryLoadBalanceType) {
         // TODO 扩展SPI
         RegistryService registryService = null;
 
-        RegistryConfig registryConfig = new RegistryConfig(registryAddress, registryType);
+        RegistryConfig registryConfig = new RegistryConfig(registryAddress, registryType,registryLoadBalanceType);
 
         try {
             registryService = new ZookeeperRegistryService();
@@ -101,7 +101,7 @@ public class BaseServer implements Server {
 
         // 创建 BossGroup
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workGroup = new NioEventLoopGroup(1);
+        EventLoopGroup workGroup = new NioEventLoopGroup(2);
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();
 

@@ -1,5 +1,8 @@
 package io.knightzz.rpc.loadbalancer.api;
 
+import io.knightzz.rpc.constants.RpcConstants;
+import io.knightzz.rpc.spi.annotation.SPI;
+
 import java.util.List;
 
 /**
@@ -11,6 +14,7 @@ import java.util.List;
  * @github <a href="https://github.com/knightzz1998">https://github.com/knightzz1998</a>
  * @create: 2023-03-09 19:25
  */
+@SPI(value = RpcConstants.SERVICE_LOAD_BALANCER_RANDOM)
 public interface ServiceLoadBalancer<T> {
 
     /**

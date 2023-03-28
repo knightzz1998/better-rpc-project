@@ -6,6 +6,7 @@ import io.knightzz.rpc.loadbalancer.random.RandomServiceLoadBalancer;
 import io.knightzz.rpc.protocol.meta.ServiceMeta;
 import io.knightzz.rpc.registry.api.RegistryService;
 import io.knightzz.rpc.registry.api.config.RegistryConfig;
+import io.knightzz.rpc.spi.loader.ExtensionLoader;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
@@ -116,7 +117,7 @@ public class ZookeeperRegistryService implements RegistryService {
     public void init(RegistryConfig registryConfig) throws Exception {
 
         // 实例化负载均衡类
-        this.serviceLoadBalancer = new RandomServiceLoadBalancer<ServiceInstance<ServiceMeta>>();
+        this.serviceLoadBalancer = ExtensionLoader.getExtension(ServiceLoadBalancer.class, registryConfig.getRegistryLoadBalanceType());
 
         // 失败重试3次. 每次重试时间间隔呈指数增长
         ExponentialBackoffRetry backoffRetry = new ExponentialBackoffRetry(BASE_SLEEP_TIME_MS, MAX_RETRIES);

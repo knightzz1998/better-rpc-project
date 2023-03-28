@@ -18,14 +18,16 @@ public class RpcSingleServer extends BaseServer {
 
     private final Logger logger = LoggerFactory.getLogger(RpcSingleServer.class);
 
-    public RpcSingleServer(String serverAddress, String registryAddress,String registryType,
+    public RpcSingleServer(String serverAddress, String registryAddress,
+                           String registryType,
+                           String registryLoadBalanceType,
                            String scanPackage,
                            String reflectType) {
         // 调用父类的构造函数
-        super(serverAddress, registryAddress, registryType, reflectType);
+        super(serverAddress, registryAddress, registryType, reflectType, registryLoadBalanceType);
         try {
             this.handlerMap = RpcServiceScanner.
-                    doScannerWithRpcServiceAnnotationFilterAndRegistryService(this.host,this.port, scanPackage,this.registryService);
+                    doScannerWithRpcServiceAnnotationFilterAndRegistryService(this.host, this.port, scanPackage, this.registryService);
         } catch (Exception e) {
             logger.debug("Rpc Server init error", e);
         }
